@@ -101,11 +101,11 @@ class SListener(StreamListener):
 
 
 ## authentication
-consumer_key = "rWWArG571Okscu8mUywEQqw7j";
-consumer_secret = "sGWXnXi5jqKhgd6N0EkaLoDQmNXYs8nD9JE5Uevn3UPpTx1eJu";
+consumer_key = <insert key>
+consumer_secret = <insert key>
 
-access_token = "22112455-8nDhNkvAUt58XX5HFdqwAbUwwAoW2MKkcEs5Bjhds";
-access_token_secret = "ePwOerZHMmC7KtHBMvYqCUIZuT7ykWWwKGa9hfZwo";
+access_token = <insert key>
+access_token_secret = <insert key>
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api      = tweepy.API(auth)
