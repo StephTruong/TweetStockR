@@ -85,13 +85,13 @@ def runHF():
     trackHF = [u"#Apple",u"#Google",u"#Yahoo"]
     listenHF = SListener(apiHank,'HighFreq')
     streamHF = tweepy.Stream(authHank, listenHF)
-    streamHF.filter(track=trackHF)
+    streamHF.filter(track=trackHF,languages=['en'])
     
 def runLF():
     trackLF= [u'#Alcoa',u'#ProcterGamble',u'#HBO']
     listenLF = SListener(apiSteph,'LowFreq' )
     streamLF = tweepy.Stream(authSteph, listenLF)
-    streamLF.filter(track=trackLF)
+    streamLF.filter(track=trackLF,languages=['en'])
 
 def main():
     
