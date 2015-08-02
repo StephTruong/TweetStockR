@@ -1,8 +1,9 @@
 import json, time, sys
 import tweepy
 from tweepy import StreamListener
-from auth.credentials import HANK_TWITTER_API_CREDENTIALS ,  STEPH_TWITTER_API_CREDENTIALS
+from auth.credentials import HANK_TWITTER_API_CREDENTIALS ,  STEPH_TWITTER_API_CREDENTIALS, HOWARD_TWITTER_API_CREDENTIALS
 from multiprocessing import Process,Pool
+from time import sleep
 
 def get_twitter_api(twitter_credentials = HANK_TWITTER_API_CREDENTIALS):
     auth = tweepy.OAuthHandler(twitter_credentials['consumer_key'], twitter_credentials['consumer_secret'])
@@ -21,16 +22,13 @@ class SListener(StreamListener):
                             + time.strftime('%Y%m%d-%H%M%S') + '.json', 'w')
         self.counter=0
         self.delout  = open('output/delete.txt', 'a')
-        print "init done"
+        print "init done for:" +fprefix
         
     def on_data(self, data):
 
         if  'in_reply_to_status' in data:
             self.on_status(data)
-
-
         elif 'limit' in data:
-            print "limit" +data
             if self.on_limit(json.loads(data)['limit']['track']) is False:
                 return False
         elif 'warning' in data:
@@ -40,23 +38,18 @@ class SListener(StreamListener):
         
 
     def on_status(self, status):
-        print "onstatus",self.counter
         self.output.write(status + "\n")
-
         self.counter += 1
-
         if self.counter>= 20000:
             self.output.close()
             self.output  = open("output/"+self.fprefix +'.' 
                             + time.strftime('%Y%m%d-%H%M%S') + '.json', 'w')
             self.counter = 0
-        print "onstatus done"
         return
 
 
 
     def on_limit(self, track):
-        print track
         sys.stderr.write(str(track) + "\n")
         return
 
@@ -76,7 +69,7 @@ class SListener(StreamListener):
 
 apiHank, authHank     = get_twitter_api(HANK_TWITTER_API_CREDENTIALS)
 apiSteph, authSteph    =  get_twitter_api(STEPH_TWITTER_API_CREDENTIALS)
-
+apiHoward, authHoward    =  get_twitter_api(HOWARD_TWITTER_API_CREDENTIALS)
 # we need to gather three streams:
 #- one unfiltered containing all tweets from firehose
 #- one filtered with high flyers stock (e.g. Google, Yahoo, ...)
@@ -93,23 +86,59 @@ def runLF():
     streamLF = tweepy.Stream(authSteph, listenLF)
     streamLF.filter(track=trackLF,languages=['en'])
 
+def runAll():
+    trackAll=[u'a']
+    listenAll = SListener(apiHoward,'All' )
+    streamAll = tweepy.Stream(authHoward, listenAll)
+    streamAll.filter(track=trackAll,languages=['en'])
+
 def main():
     
 
     print "Streaming started..."
+    # apps=[runHF,runLF,runAll]
+    # processes={}
+    # n=0
+   
+    # for app in apps:
+    #     instance = app()
+    #     p = Process(target=instance.start_listener)
+    #     p.start()
+    #     processes[n] = (p,a) # Keep the process and the app to monitor or restart
+    #     n += 1
+
+    # while len(processes) > 0:
+    #     for n in processes.keys():
+    #         (p,a) = processes[n]
+    #         sleep(0.5)
+    #         if p.exitcode is None and not p.is_alive(): # Not finished and not running
+    #             print "alive"
+    #              # Do your error handling and restarting here assigning the new process to processes[n]
+    #         elif p.exitcode < 0:
+    #             print ('Process Ended with an error or a terminate', a)
+    #             # Handle this either by restarting or delete the entry so it is removed from list as for else
+    #         else:
+    #             print (a, 'finished')
+    #             p.join() # Allow tidyup
+    #             del processes[n] # Removed finished items from the dictionary 
+    #             # When none are left then loop will end
 
     try: 
-        #not sure how to pass keyword argument so im going brute whn i call process class.
+        #not sure how to pass keyword argument so im going brute when i call process class.
         pHF= Process(target=runHF)
         pLF= Process(target=runLF)
+        pAll= Process(target=runAll)
         pHF.start()
         pLF.start()
+        pAll.start()
         pHF.join()
         pLF.join()
+        pAll.join()
     except:
         print "error!"
         pHF.join()
         pLF.join()
+        pAll.join()
 
 if __name__ == '__main__':
     main()

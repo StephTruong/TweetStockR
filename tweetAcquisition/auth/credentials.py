@@ -11,3 +11,15 @@ STEPH_TWITTER_API_CREDENTIALS = {
 	'access_token':'22112455-8nDhNkvAUt58XX5HFdqwAbUwwAoW2MKkcEs5Bjhds',
 	'access_token_secret':'ePwOerZHMmC7KtHBMvYqCUIZuT7ykWWwKGa9hfZwo',
 }
+
+HOWARD_TWITTER_API_CREDENTIALS = {
+	'consumer_key':'GUQnOAjwgusZJPrFYVg7IdKev',
+	'consumer_secret':'vMIOPYnPDARxCffmHvbfTZ9P0h6E7MXW02as8XVj0PiFuTpWyO',
+	'access_token':'34623004-HuoMTDbUXYIQwU4O4jndFv5DwylMl2KXof05o2MRk',
+	'access_token_secret':'0a8tzlzwqa99GiJNWS01uznbwskNqIpLrcsmKj1jPjCVt',
+}
+
+
+
+ 
+
