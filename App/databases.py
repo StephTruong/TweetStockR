@@ -9,7 +9,7 @@ def getsqlite(name='db/stocks.sqlite3'):
 
 def sqlite_setup(conn):
 	cursor = conn.cursor()
-	cursor.execute("CREATE TABLE prices (id integer, name text, datetime timestamp, price real, cur_price real, fix_price real)")
+	cursor.execute("CREATE TABLE prices (id integer, name text, recorded timestamp, datetime timestamp, price real)")
 	cursor.execute("CREATE TABLE sentiment (id integer, score real, datetime timestamp, company text, retweet integer)")
 
 def insert_into_price_table(conn, ticker):
@@ -18,16 +18,16 @@ def insert_into_price_table(conn, ticker):
 	dt_fmt = "%Y-%m-%dT%H:%M:%SZ"
 	for tick in ticker:
 		try:
-			data.append( ( tick['id'], tick['t'], datetime.datetime.strptime(tick['lt_dts'], dt_fmt) , tick['l'], tick['l_cur'], tick['l_fix'] ) )
+			data.append( ( tick['id'], tick['t'], datetime.datetime.now(), datetime.datetime.strptime(tick['lt_dts'], dt_fmt) , tick['l'] ) )
 		except Exception:
 			pass
 	# dump prices to SQLite
-	cursor.executemany("INSERT INTO prices VALUES (?,?,?,?,?,?)", data)
+	cursor.executemany("INSERT INTO prices VALUES (?,?,?,?,?)", data)
 	conn.commit()
 
 def insert_into_sentiment_table(conn, cursor, tweet):
 	# dump sentiment to SQLite
-	cursor.execute("INSERT INTO sentiment VALUES (?,?,?,?)", tweet)
+	cursor.execute("INSERT INTO sentiment VALUES (?,?,?,?,?)", tweet)
 	conn.commit()
 
 def get_mongo_conn():
@@ -39,7 +39,7 @@ def dump_collection_to_s3(coll, bucket, basename):
 	coll.drop()
 	write_string_to_key(bucket, name, json.dumps(data, ensure_ascii=False))
 
-def upsert_tweet(coll, tweet, bucket, basename):
+def upsert_tweet(coll, tweet, bucket):
 	status = coll.update( {'id': tweet['id']}, tweet, upsert=True )
 	if coll.count() > 1000:
 		dump_collection_to_s3(coll, bucket, 'tweetdump')
@@ -49,6 +49,9 @@ if __name__=="__main__":
 	pass
 	## SET UP
 	# conn = getsqlite('db/stocks.sqlite3')
+	# cur = conn.cursor()
+	# cur.execute("DROP TABLE prices")
+	# cur.execute("DROP TABLE sentiment")
 	# sqlite_setup(conn)
 	# conn.close()
 
