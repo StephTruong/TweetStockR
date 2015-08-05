@@ -24,23 +24,22 @@ class acquireTicker():
 
 def getSymbol(filename):
     filename
-    mFile = open(filename,'rb') 
+    mFile = open(filename,'rU') 
     reader =csv.reader(mFile)
     symbolString=""
     first=True
     for i in reader:
         if not first:
             symbolString=symbolString+','
-        symbolString=symbolString+'NYSE:'+i[0]
+        symbolString=symbolString+i[2]+':'+i[0]
         first=False
     return symbolString
 
 if __name__ == "__main__":
     
-    os.environ['TZ'] = 'US/Eastern' #set timezone to EST for US market
-    time.tzset()
+
     
-    sfiles=['tickerlist1.csv','tickerlist2.csv','tickerlist3.csv']
+    sfiles=['tickerlistHW1.csv','tickerlistHW2.csv','tickerlistHW3.csv']
     symbolList=[]
     for s in sfiles:
         symbolList.append(getSymbol(s))
@@ -56,7 +55,7 @@ if __name__ == "__main__":
 
     conn= S3Connection(AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY)
     date = time.strftime('%Y-%m-%d')
-    myBucket= Bucketer(conn,'st_tweetstock_finance',date, chunksize=10000) 
+    myBucket= Bucketer(conn,'st_tweetstock_finance',date, chunksize=10) 
     
     while 1:
         quote = r1.get()
@@ -68,4 +67,5 @@ if __name__ == "__main__":
         quote = r3.get()
         for q in quote:
             myBucket.add_ticker(q)
+        print "added"
         time.sleep(5)
