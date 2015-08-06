@@ -4,6 +4,7 @@ import requests
 import pickle
 import logging
 from databases import getsqlite, insert_into_price_table
+import datetime
 
 def get_tickers(infile = 'tickers.pickle'):
 	with open(infile, 'rb') as cucumber:
@@ -16,15 +17,25 @@ def get_stock_prices(conn, ticker):
 	insert_into_price_table(conn, data)
 	logging.debug('Adding %d records to stock data', len(data))
 
+def stock_prices_run_forever(conn, tickers):
+	
+	while True:
+		now = datetime.datetime.now()
+		# if ((now.hour >= 9 and now.minute >=30) or (now.hour > 9)) and now.hour < 16: # only get data during stock exchange hours (no cushion)
+
+		if now.hour >= 9 and (now.hour < 16 or (now.hour <= 16 and now.minute <= 30)): # only get data during stock exchange hours with half hour window on either side
+			logging.debug("Acquiring Stock Data" )
+			start = time.time()
+			for t in tickers:
+				get_stock_prices(sqlconn, t)
+			remaining = 5 - (time.time() - start)
+			time.sleep(remaining)
+		else:
+			time.sleep(5)
+
 if __name__=="__main__":
 	
 	sqlconn = getsqlite()
 	tickers = get_tickers()
 
-	while True:
-		logging.debug("Acquiring Stock Data")
-		start = time.time()
-		for t in tickers:
-			get_stock_prices(sqlconn, t)
-		remaining = 5 - (time.time() - start)
-		time.sleep(remaining)
+	stock_prices_run_forever(sqlconn, tickers)
