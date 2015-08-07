@@ -1,12 +1,13 @@
 import json
 import time
+import os
 import requests
 import pickle
 import logging
 from databases import getsqlite, insert_into_price_table
 import datetime
 
-def get_tickers(infile = 'tickers.pickle'):
+def get_tickers(infile = 'picklejar/tickers.pickle'):
 	with open(infile, 'rb') as cucumber:
 		return pickle.load(cucumber)
 
@@ -18,6 +19,9 @@ def get_stock_prices(conn, ticker):
 	logging.debug('Adding %d records to stock data', len(data))
 
 def stock_prices_run_forever(conn, tickers):
+
+	os.environ['TZ'] = 'US/Eastern' #set timezone to EST for US market
+	time.tzset()
 	
 	while True:
 		now = datetime.datetime.now()
