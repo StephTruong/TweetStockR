@@ -87,10 +87,9 @@ def runLF():
     streamLF.filter(track=trackLF,languages=['en'])
 
 def runAll():
-    trackAll=[u'a']
     listenAll = SListener(apiHoward,'All' )
     streamAll = tweepy.Stream(authHoward, listenAll)
-    streamAll.filter(track=trackAll,languages=['en'])
+    streamAll.sample(languages=['en'])
 
 def main():
     

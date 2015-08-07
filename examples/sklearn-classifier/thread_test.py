@@ -136,38 +136,38 @@ class TweetParserProcess(multiprocessing.Process):
             1515 in matrix.indices
         return nb.predict(matrix)
 
-# myQueue = Queue.Queue()
-myQueue = multiprocessing.JoinableQueue()
+# # myQueue = Queue.Queue()
+# myQueue = multiprocessing.JoinableQueue()
+
+# # start = time.time()
+# parsers = []
+# outlists = [list() for i in range(3)]
+# for i, olist in enumerate(outlists):
+# 	print i, olist
+# 	parser = TweetParserProcess(myQueue, olist, i)
+# 	parser.daemon = True
+# 	parsers.append(parser)
+
+# for p in parsers:
+# 	p.start()
+# # print time.time() - start
+
 
 # start = time.time()
-parsers = []
-outlists = [list() for i in range(3)]
-for i, olist in enumerate(outlists):
-	print i, olist
-	parser = TweetParserProcess(myQueue, olist, i)
-	parser.daemon = True
-	parsers.append(parser)
-
-for p in parsers:
-	p.start()
+# times = []
+# for tweet in faketweets[:-1]:
+# 	myQueue.put([tweet])
+# 	# pass
+# for p in parsers:
+# 	myQueue.put(None)
 # print time.time() - start
+# # myQueue.join()
+# total_time = time.time() - start
 
+# suml = 0
+# for p in outlists:
+# 	print np.mean(p)
+# 	suml += len(p)
 
-start = time.time()
-times = []
-for tweet in faketweets[:-1]:
-	myQueue.put([tweet])
-	# pass
-for p in parsers:
-	myQueue.put(None)
-print time.time() - start
-# myQueue.join()
-total_time = time.time() - start
-
-suml = 0
-for p in outlists:
-	print np.mean(p)
-	suml += len(p)
-
-print total_time, suml
-print suml / total_time
+# print total_time, suml
+# print suml / total_time
