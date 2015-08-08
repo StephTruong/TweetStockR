@@ -2,6 +2,7 @@ import json
 import datetime
 import sqlite3 as sql
 import pymongo as pm
+from datetime import datetime
 from aws import get_s3_connection, write_string_to_key
 
 def getsqlite(name='db/stocks.sqlite3'):
@@ -18,29 +19,36 @@ def insert_into_price_table(conn, ticker):
 	dt_fmt = "%Y-%m-%dT%H:%M:%SZ"
 	for tick in ticker:
 		try:
-			data.append( ( tick['id'], tick['t'], datetime.datetime.now(), datetime.datetime.strptime(tick['lt_dts'], dt_fmt) , tick['l'] ) )
+			data.append( ( tick['id'], tick['t'], datetime.now(), datetime.strptime(tick['lt_dts'], dt_fmt) , tick['l'] ) )
 		except Exception:
 			pass
 	# dump prices to SQLite
 	cursor.executemany("INSERT INTO prices VALUES (?,?,?,?,?)", data)
 	conn.commit()
 
-def insert_into_sentiment_table(conn, cursor, tweet):
-	# dump sentiment to SQLite
-	cursor.execute("INSERT INTO sentiment VALUES (?,?,?,?,?)", tweet)
+def insert_into_sentiment_table(conn, cursor, mltweet):
+	tweet, score, comps = mltweet
+	if len(comps[1]) > 0:
+		for comp in comps[1]:
+			data = ( tweet['id'], score[0], datetime.now(), comp, comps[0] ) 
+			# dump sentiment to SQLite
+			cursor.execute("INSERT INTO sentiment VALUES (?,?,?,?,?)", data)
+	else:
+		data = ( tweet['id'], score[0], datetime.now(), None , comps[0] ) 
+		cursor.execute("INSERT INTO sentiment VALUES (?,?,?,?,?)", data)
 	conn.commit()
 
 def get_mongo_conn():
 	return pm.MongoClient()
 
 def dump_collection_to_s3(coll, bucket, basename):
-	name = basename + "_" + datetime.datetime.now().strftime('%Y%m%d%H%M%S') + '.json'
+	name = basename + "_" + datetime.now().strftime('%Y%m%d%H%M%S') + '.json'
 	data = list(coll.find())
 	coll.drop()
 	write_string_to_key(bucket, name, json.dumps(data, ensure_ascii=False))
 
 def upsert_tweet(coll, tweet, bucket):
-	status = coll.update( {'id': tweet['id']}, tweet, upsert=True )
+	status = coll.update( {'_id': tweet['id']}, tweet, upsert=True )
 	if coll.count() > 1000:
 		dump_collection_to_s3(coll, bucket, 'tweetdump')
 	return status['updatedExisting']
