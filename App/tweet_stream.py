@@ -1,3 +1,4 @@
+import logging
 import json, time, sys
 import tweepy
 from tweepy import StreamListener
@@ -23,7 +24,7 @@ class SListener(StreamListener):
         self.api = api
         self.fprefix = fprefix
         # self.delout  = open('output/delete.txt', 'a')
-        print "init done for:" +fprefix
+        logging.info("init done for:" +fprefix)
         self.mongo = get_mongo_conn()
         self.mongocoll = self.mongo['tweetstock'].temptweets
         self.sql = getsqlite()
@@ -96,23 +97,50 @@ def main():
     #- one filtered with high flyers stock (e.g. Google, Yahoo, ...)
     #- one filtered with low flyers stock
     def runHF():
-        trackHF = [u"#Apple",u"#Google",u"#Yahoo"]
-        listenHF = SListener(apiHank,'HighFreq')
-        streamHF = tweepy.Stream(authHank, listenHF)
-        streamHF.filter(track=trackHF,languages=['en'])
+        while True:
+            try:
+                trackHF = [u"#Apple",u"#Google",u"#Yahoo"]
+                listenHF = SListener(apiHank,'HighFreq')
+                streamHF = tweepy.Stream(authHank, listenHF)
+                streamHF.filter(track=trackHF,languages=['en'])
+            except Exception:
+                logging.warning(e)
+                time.sleep(10)
+                pass
+            except KeyboardInterrupt:
+                break
+                raise Exception('Streaming Cancelled')
         
     def runLF():
-        trackLF= [u'#Alcoa',u'#ProcterGamble',u'#HBO']
-        listenLF = SListener(apiSteph,'LowFreq' )
-        streamLF = tweepy.Stream(authSteph, listenLF)
-        streamLF.filter(track=trackLF,languages=['en'])
+        while True:
+            try:
+                trackLF= [u'#Alcoa',u'#ProcterGamble',u'#HBO']
+                listenLF = SListener(apiSteph,'LowFreq' )
+                streamLF = tweepy.Stream(authSteph, listenLF)
+                streamLF.filter(track=trackLF,languages=['en'])
+            except Exception, e:
+                logging.warning(e)
+                time.sleep(10)
+                pass
+            except KeyboardInterrupt:
+                break
+                raise Exception('Streaming Cancelled')
 
     def runAll():
-        listenAll = SListener(apiHoward,'All' )
-        streamAll = tweepy.Stream(authHoward, listenAll)
-        streamAll.sample(languages=['en'])
+        while True:
+            try:
+                listenAll = SListener(apiHoward,'All' )
+                streamAll = tweepy.Stream(authHoward, listenAll)
+                streamAll.sample(languages=['en'])
+            except Exception:
+                logging.warning(e)
+                time.sleep(10)
+                pass
+            except KeyboardInterrupt:
+                break
+                raise Exception('Streaming Cancelled')
 
-    print "Streaming started..."
+    logging.info("Streaming started...")
     # apps=[runHF,runLF,runAll]
     # processes={}
     # n=0
@@ -142,26 +170,24 @@ def main():
 
     
     try: 
-        while True:
-            try:
-                #not sure how to pass keyword argument so im going brute when i call process class.
-                pHF= Process(target=runHF)
-                pLF= Process(target=runLF)
-                pAll= Process(target=runAll)
-                pHF.daemon = True
-                pLF.daemon = True
-                pAll.daemon = True
-                pHF.start()
-                pLF.start()
-                pAll.start()
-                pHF.join()
-                pLF.join()
-                pAll.join()
-            except Exception:
-                print "error!"
-                pHF.join()
-                pLF.join()
-                pAll.join()
+            #not sure how to pass keyword argument so im going brute when i call process class.
+        pHF= Process(target=runHF)
+        pLF= Process(target=runLF)
+        pAll= Process(target=runAll)
+        pHF.daemon = True
+        pLF.daemon = True
+        pAll.daemon = True
+        pHF.start()
+        pLF.start()
+        pAll.start()
+        pHF.join()
+        pLF.join()
+        pAll.join()
+    except Exception, e:
+        logging.warning("stream error!", e)
+        pHF.join()
+        pLF.join()
+        pAll.join()
     except KeyboardInterrupt:
         pHF.terminate()
         pLF.terminate()
@@ -169,4 +195,5 @@ def main():
 
 
 if __name__ == '__main__':
+    logging.basicConfig(filename='stream.log', level=logging.DEBUG)
     main()

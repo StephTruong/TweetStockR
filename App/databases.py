@@ -2,6 +2,7 @@ import json
 import datetime
 import sqlite3 as sql
 import pymongo as pm
+import logging
 from datetime import datetime
 from aws import get_s3_connection, write_string_to_key
 
@@ -42,8 +43,10 @@ def get_mongo_conn():
 	return pm.MongoClient()
 
 def dump_collection_to_s3(coll, bucket, basename):
+	logging.info('dumping collection to s3')
 	name = basename + "_" + datetime.now().strftime('%Y%m%d%H%M%S') + '.json'
 	data = list(coll.find())
+	logging.info('Dropping mongo')
 	coll.drop()
 	write_string_to_key(bucket, name, json.dumps(data, ensure_ascii=False))
 
@@ -54,6 +57,7 @@ def upsert_tweet(coll, tweet, bucket):
 	return status['updatedExisting']
 
 if __name__=="__main__":
+	logging.basicConfig(filename='db.log', level=logging.DEBUG)
 	pass
 	## SET UP
 	# conn = getsqlite('db/stocks.sqlite3')
