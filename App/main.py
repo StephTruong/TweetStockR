@@ -1,6 +1,7 @@
 DOCSTRING = """Main TweetStock Execution Code"""
 
 import sys
+import logging
 import subprocess
 from multiprocessing import Process
 from tweet_stream import main
@@ -12,7 +13,7 @@ def worker(args):
 
 
 if __name__=="__main__":
-	
+	# logging.basicConfig(filename='main.log', level=logging.DEBUG)
 	# tickers = get_tickers()
 	# sqlconn = getsqlite()
 
