@@ -30,7 +30,7 @@ def tweet_preprocessor(s):
     s = re.sub(r'(http\S+)', ' URL ', s)
     return s
 
-def check_for_companies_and_retweets(transformed_tweet, vocab, symbols, rt_index):
+def check_for_companies_and_retweets(transformed_tweet, vocab, symbols):
 	comps = []
 	for symbol in symbols:
 		try:
@@ -39,12 +39,16 @@ def check_for_companies_and_retweets(transformed_tweet, vocab, symbols, rt_index
 		except KeyError:
 			# having problems with m, bf/b, etc etc
 			pass
+	if vocab['rt'] in transformed_tweet.indices:
+		rt = 1
+	else:
+		rt = 0
 	return (rt, comps)
 
-def ml_process_tweet(tweet, cv, nb, symbols, rt_index):
+def ml_process_tweet(tweet, cv, nb, symbols ):
 	transformed_tweet = cv.transform([tweet['text']])
 	score = nb.predict(transformed_tweet)
-	comps = check_for_companies(transformed_tweet, cv.vocabulary_, symbols, rt_index)
+	comps = check_for_companies_and_retweets(transformed_tweet, cv.vocabulary_, symbols)
 	return (tweet, score, comps)
 
 
