@@ -26,16 +26,19 @@ def stock_prices_run_forever(conn, tickers):
 	while True:
 		now = datetime.datetime.now()
 		# if ((now.hour >= 9 and now.minute >=30) or (now.hour > 9)) and now.hour < 16: # only get data during stock exchange hours (no cushion)
-
-		if now.hour >= 9 and (now.hour < 16 or (now.hour <= 16 and now.minute <= 30)): # only get data during stock exchange hours with half hour window on either side
-			logging.debug("Acquiring Stock Data" )
-			start = time.time()
-			for t in tickers:
-				get_stock_prices(sqlconn, t)
-			remaining = 5 - (time.time() - start)
-			time.sleep(remaining)
-		else:
-			time.sleep(5)
+		try:
+			if now.hour >= 9 and (now.hour < 16 or (now.hour <= 16 and now.minute <= 30)): # only get data during stock exchange hours with half hour window on either side
+				print( "Acquiring Stock Data" )
+				start = time.time()
+				for t in tickers:
+					get_stock_prices(sqlconn, t)
+				remaining = 5 - (time.time() - start)
+				if remaining > 0:
+					time.sleep(remaining)
+			else:
+				time.sleep(5)
+		except Exception:
+			pass
 
 if __name__=="__main__":
 	

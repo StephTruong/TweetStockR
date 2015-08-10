@@ -95,7 +95,7 @@ def main():
     #- one unfiltered containing all tweets from firehose
     #- one filtered with high flyers stock (e.g. Google, Yahoo, ...)
     #- one filtered with low flyers stock
-    def runHF(): 
+    def runHF():
         trackHF = [u"#Apple",u"#Google",u"#Yahoo"]
         listenHF = SListener(apiHank,'HighFreq')
         streamHF = tweepy.Stream(authHank, listenHF)
@@ -140,25 +140,33 @@ def main():
     #             del processes[n] # Removed finished items from the dictionary 
     #             # When none are left then loop will end
 
+    
     try: 
-        #not sure how to pass keyword argument so im going brute when i call process class.
-        pHF= Process(target=runHF)
-        pLF= Process(target=runLF)
-        pAll= Process(target=runAll)
-        pHF.daemon = True
-        pLF.daemon = True
-        pAll.daemon = True
-        pHF.start()
-        pLF.start()
-        pAll.start()
-        pHF.join()
-        pLF.join()
-        pAll.join()
-    except:
-        print "error!"
-        pHF.join()
-        pLF.join()
-        pAll.join()
+        while True:
+            try:
+                #not sure how to pass keyword argument so im going brute when i call process class.
+                pHF= Process(target=runHF)
+                pLF= Process(target=runLF)
+                pAll= Process(target=runAll)
+                pHF.daemon = True
+                pLF.daemon = True
+                pAll.daemon = True
+                pHF.start()
+                pLF.start()
+                pAll.start()
+                pHF.join()
+                pLF.join()
+                pAll.join()
+            except Exception:
+                print "error!"
+                pHF.join()
+                pLF.join()
+                pAll.join()
+    except KeyboardInterrupt:
+        pHF.terminate()
+        pLF.terminate()
+        pAll.terminate()
+
 
 if __name__ == '__main__':
     main()
