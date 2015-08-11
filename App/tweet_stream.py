@@ -59,13 +59,14 @@ class SListener(StreamListener):
         return
 
 
-
     def on_limit(self, track):
         sys.stderr.write(str(track) + "\n")
         return
 
     def on_error(self, status_code):
         sys.stderr.write('Error: ' + str(status_code) + "\n")
+        print 'sleeping'
+        time.sleep(60)
         return False
 
     def on_timeout(self):
@@ -103,7 +104,8 @@ def main():
                 listenHF = SListener(apiHank,'HighFreq')
                 streamHF = tweepy.Stream(authHank, listenHF)
                 streamHF.filter(track=trackHF,languages=['en'])
-            except Exception:
+            except Exception, e:
+                print e
                 logging.warning(e)
                 time.sleep(10)
                 pass
@@ -119,6 +121,7 @@ def main():
                 streamLF = tweepy.Stream(authSteph, listenLF)
                 streamLF.filter(track=trackLF,languages=['en'])
             except Exception, e:
+                print e
                 logging.warning(e)
                 time.sleep(10)
                 pass
@@ -129,10 +132,14 @@ def main():
     def runAll():
         while True:
             try:
+                print 'init listener'
                 listenAll = SListener(apiHoward,'All' )
+                print 'init stream'
                 streamAll = tweepy.Stream(authHoward, listenAll)
+                print 'sample stream'
                 streamAll.sample(languages=['en'])
-            except Exception:
+            except Exception, e:
+                print e
                 logging.warning(e)
                 time.sleep(10)
                 pass
