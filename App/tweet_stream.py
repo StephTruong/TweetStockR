@@ -105,7 +105,8 @@ def main():
                 logging.warning(e)
                 print 'Error in HF! Sleeping for', stdsleep
                 time.sleep(stdsleep)
-                stdsleep *= 2
+                if stdsleep <= 300:
+                    stdsleep *= 2
             except KeyboardInterrupt:
                 break
                 raise Exception('Streaming Cancelled')
@@ -125,7 +126,8 @@ def main():
                 logging.warning(e)
                 print 'Error in LF! Sleeping for', stdsleep
                 time.sleep(stdsleep)
-                stdsleep *= 2
+                if stdsleep <= 300:
+                    stdsleep *= 2
             except KeyboardInterrupt:
                 break
                 raise Exception('Streaming Cancelled')
@@ -144,7 +146,8 @@ def main():
                 logging.warning(e)
                 print 'Error in sample! Sleeping for', stdsleep
                 time.sleep(stdsleep)
-                stdsleep *= 2
+                if stdsleep <= 300:
+                    stdsleep *= 2
             except KeyboardInterrupt:
                 break
                 raise Exception('Streaming Cancelled')
