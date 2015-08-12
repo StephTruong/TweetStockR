@@ -18,10 +18,10 @@ def get_stock_symbols(fname = 'picklejar/tickers.pickle'):
 			out.append(ticker.split(':')[1].lower())
 	return out
 
-def get_countvectorizer(fname = 'picklejar/count_vectorizer.pickle'):
+def get_countvectorizer(fname = 'picklejar/count_vectorizer-081215.pickle'):
 	return joblib.load(fname)
 
-def get_naivebayes(fname='picklejar/naive_bayes.pickle'):
+def get_naivebayes(fname='picklejar/naive_bayes-081215.pickle'):
 	return joblib.load(fname)
 
 def tweet_preprocessor(s):
