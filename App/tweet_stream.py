@@ -99,7 +99,7 @@ def main():
     def runHF():
         while True:
             try:
-                trackHF = [u"#Apple",u"#Google",u"#Yahoo"]
+                trackHF = [u"Apple",u"iphone",u"iOs",u"itunes",u"macbook",u"ipad",u"@apple",u"#apple",u"$AAPL",u"Google",u"@google",u"#alphabet" "#google",u"#GOOGL",u"Microsoft",u"Windows",u"@microsoft",u"#microsoft",u"#MSFT",u"Berkshire",u"Warren",u"Buffet",u"@Berkshire",u"Hathaway",u"@warrenbuffet",u"#BerkshireHathaway",u"#BRK/B",u"Exxon",u"@exxon",u"#exxon",u"#XOM",u"WellsFargo",u"@WellsFargo",u"#WellsFargo",u"#WFC",u"johnson&johnson",u"@JNJNews",u"@JNJCares",u"#JNJ",u"facebook",u"@facebook",u"#facebook",u"#FB"]
                 listenHF = SListener(apiHank,'HighFreq')
                 streamHF = tweepy.Stream(authHank, listenHF)
                 streamHF.filter(track=trackHF,languages=['en'])
@@ -114,7 +114,7 @@ def main():
     def runLF():
         while True:
             try:
-                trackLF= [u'#Alcoa',u'#ProcterGamble',u'#HBO']
+                trackLF= [u"Staples",u"@staples",u"#staples",u"#SPLS",u"news",u"corp",u"@newscorp",u"#NWSA",u"michael",u"kors",u"@MichaelKors",u"#KORS",u"mattel",u"@mattel",u"#MAT",u"urban",u"outfitters",u"@UrbanOutfitters",u"#UrbanOutfitters",u"#URBN",u"Owens-illinois",u"#OwensIllinois",u"#OI",u"Joy",u"Global",u"@JoyGlobalInc",u"#JOY",u"Flir system", u"@SeeAtNight", u"#FLIR"]
                 listenLF = SListener(apiSteph,'LowFreq' )
                 streamLF = tweepy.Stream(authSteph, listenLF)
                 streamLF.filter(track=trackLF,languages=['en'])
