@@ -153,7 +153,6 @@ def main():
                 streamAll = tweepy.Stream(authHoward, listenAll)
                 print 'sample stream'
                 lastsleep=time.time()
-                lastsleep = time.time()
                 streamAll.sample(languages=['en'])
             except Exception, e:
                 print e
