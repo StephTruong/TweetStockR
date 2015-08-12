@@ -73,8 +73,6 @@ class SListener(StreamListener):
         sys.stderr.write("Timeout, sleeping for 60 seconds...\n")
         time.sleep(60)
         return 
-    
-
 
 
 ## authentication
@@ -83,11 +81,6 @@ class SListener(StreamListener):
 
 def main():
     
-    # with open('auth/twitter_credentials.json','rb') as au:
-    #     creds = json.load(au)
-    # HANK_TWITTER_API_CREDENTIALS = creds['HANK_TWITTER_API_CREDENTIALS']
-    # STEPH_TWITTER_API_CREDENTIALS = creds['STEPH_TWITTER_API_CREDENTIALS']
-    # HOWARD_TWITTER_API_CREDENTIALS = creds['HOWARD_TWITTER_API_CREDENTIALS']
 
     apiHank, authHank     = get_twitter_api(HANK_TWITTER_API_CREDENTIALS)
     apiSteph, authSteph    =  get_twitter_api(STEPH_TWITTER_API_CREDENTIALS)
@@ -98,51 +91,60 @@ def main():
     #- one filtered with high flyers stock (e.g. Google, Yahoo, ...)
     #- one filtered with low flyers stock
     def runHF():
+        stdsleep=4
         while True:
             try:
-                trackHF = [u"Apple",u"iphone",u"iOs",u"itunes",u"macbook",u"ipad",u"@apple",u"#apple",u"$AAPL",u"Google",u"@google",u"#alphabet" "#google",u"#GOOGL",u"Microsoft",u"Windows",u"@microsoft",u"#microsoft",u"#MSFT",u"Berkshire Hathaway",u"Warren Buffet",u"@Berkshire Hathaway",u"@BerkshireHathaway",u"@warrenbuffet",u"#BerkshireHathaway",u"#BRK/B",u"Exxon",u"@exxon",u"#exxon",u"#XOM",u"WellsFargo",u"@WellsFargo",u"#WellsFargo",u"#WFC",u"johnson&johnson",u"@JNJNews",u"@JNJCares",u"#JNJ",u"facebook",u"@facebook",u"#facebook",u"#FB"]
+                print 'HF listener init'
+                trackHF = [u"Apple",u"iphone",u"iOs",u"itunes",u"macbook",u"ipad",u"@apple",u"#apple",u"$AAPL",u"Berkshire Hathaway",u"Warren Buffet",u"@Berkshire Hathaway",u"@BerkshireHathaway",u"@warrenbuffet",u"#BerkshireHathaway",u"#BRK/B",u"Exxon",u"@exxon",u"#exxon",u"#XOM",u"WellsFargo",u"@WellsFargo",u"#WellsFargo",u"#WFC",u"johnson&johnson",u"@JNJNews",u"@JNJCares",u"#JNJ",u"facebook",u"@facebook",u"#facebook",u"#FB",u"urban outfitters",u"@UrbanOutfitters",u"#UrbanOutfitters",u"#URBN",u"Owens-illinois",u"#OwensIllinois",u"#OI",u"Joy Global",u"@JoyGlobalInc",u"#JOY",u"Flir system", u"@SeeAtNight", u"#FLIR"]
                 listenHF = SListener(apiHank,'HighFreq')
                 streamHF = tweepy.Stream(authHank, listenHF)
+                print 'HF listener stream'
                 streamHF.filter(track=trackHF,languages=['en'])
             except Exception, e:
                 print e
                 logging.warning(e)
-                time.sleep(10)
-                pass
+                print 'Error in HF! Sleeping for', stdsleep
+                time.sleep(stdsleep)
+                stdsleep *= 2
             except KeyboardInterrupt:
                 break
                 raise Exception('Streaming Cancelled')
         
     def runLF():
+        stdsleep=4
         while True:
             try:
-                trackLF= [u"Staples",u"@staples",u"#staples",u"#SPLS",u"newscorp",u"@newscorp",u"#NWSA",u"michael kors",u"@MichaelKors",u"#KORS",u"mattel",u"@mattel",u"#MAT",u"urban outfitters",u"@UrbanOutfitters",u"#UrbanOutfitters",u"#URBN",u"Owens-illinois",u"#OwensIllinois",u"#OI",u"Joy Global",u"@JoyGlobalInc",u"#JOY",u"Flir system", u"@SeeAtNight", u"#FLIR"]
+                print 'LF listener init'
+                trackLF= [u"Staples",u"@staples",u"#staples",u"#SPLS",u"newscorp",u"@newscorp",u"#NWSA",u"michael kors",u"@MichaelKors",u"#KORS",u"mattel",u"@mattel",u"#MAT",u"urban outfitters",u"@UrbanOutfitters",u"#UrbanOutfitters",u"#URBN",u"Owens-illinois",u"#OwensIllinois",u"#OI",u"Joy Global",u"@JoyGlobalInc",u"#JOY",u"Flir system", u"@SeeAtNight", u"#FLIR",u"Google",u"@google",u"#alphabet" "#google",u"#GOOGL",u"Microsoft",u"Windows",u"@microsoft",u"#microsoft",u"#MSFT"]
                 listenLF = SListener(apiSteph,'LowFreq' )
                 streamLF = tweepy.Stream(authSteph, listenLF)
+                print 'lf listener stream'
                 streamLF.filter(track=trackLF,languages=['en'])
             except Exception, e:
                 print e
                 logging.warning(e)
-                time.sleep(10)
-                pass
+                print 'Error in LF! Sleeping for', stdsleep
+                time.sleep(stdsleep)
+                stdsleep *= 2
             except KeyboardInterrupt:
                 break
                 raise Exception('Streaming Cancelled')
 
     def runAll():
+        stdsleep=4
         while True:
             try:
-                print 'init listener'
+                print 'Sample listener init'
                 listenAll = SListener(apiHoward,'All' )
-                print 'init stream'
                 streamAll = tweepy.Stream(authHoward, listenAll)
                 print 'sample stream'
                 streamAll.sample(languages=['en'])
             except Exception, e:
                 print e
                 logging.warning(e)
-                time.sleep(10)
-                pass
+                print 'Error in sample! Sleeping for', stdsleep
+                time.sleep(stdsleep)
+                stdsleep *= 2
             except KeyboardInterrupt:
                 break
                 raise Exception('Streaming Cancelled')
@@ -151,29 +153,6 @@ def main():
     # apps=[runHF,runLF,runAll]
     # processes={}
     # n=0
-   
-    # for app in apps:
-    #     instance = app()
-    #     p = Process(target=instance.start_listener)
-    #     p.start()
-    #     processes[n] = (p,a) # Keep the process and the app to monitor or restart
-    #     n += 1
-
-    # while len(processes) > 0:
-    #     for n in processes.keys():
-    #         (p,a) = processes[n]
-    #         sleep(0.5)
-    #         if p.exitcode is None and not p.is_alive(): # Not finished and not running
-    #             print "alive"
-    #              # Do your error handling and restarting here assigning the new process to processes[n]
-    #         elif p.exitcode < 0:
-    #             print ('Process Ended with an error or a terminate', a)
-    #             # Handle this either by restarting or delete the entry so it is removed from list as for else
-    #         else:
-    #             print (a, 'finished')
-    #             p.join() # Allow tidyup
-    #             del processes[n] # Removed finished items from the dictionary 
-    #             # When none are left then loop will end
 
     
     try: 
