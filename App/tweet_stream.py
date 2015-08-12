@@ -54,7 +54,7 @@ class SListener(StreamListener):
             processed = ml_process_tweet(tweet, self.cv, self.nb, self.symbols)
             insert_into_sentiment_table(self.sql, self.cursor, processed)
         self.count += 1
-        if self.count % 10 == 0:
+        if self.count % 50 == 0:
             print self.fprefix, self.count, 'tweets in', time.time() - self.start_time, 'seconds', float(self.count) / (time.time() - self.start_time)
         return
 
@@ -76,9 +76,6 @@ class SListener(StreamListener):
 
 
 ## authentication
-
-
-
 def main():
     
 
@@ -91,7 +88,8 @@ def main():
     #- one filtered with high flyers stock (e.g. Google, Yahoo, ...)
     #- one filtered with low flyers stock
     def runHF():
-        stdsleep=4
+        lastsleep = time.time()
+        stdsleep=1
         while True:
             try:
                 print 'HF listener init'
@@ -99,20 +97,26 @@ def main():
                 listenHF = SListener(apiHank,'HighFreq')
                 streamHF = tweepy.Stream(authHank, listenHF)
                 print 'HF listener stream'
+                lastsleep=time.time()
                 streamHF.filter(track=trackHF,languages=['en'])
             except Exception, e:
+                if stdsleep <= 300:
+                    stdsleep *= 2
+                else:
+                    stdsleep=300
                 print e
                 logging.warning(e)
                 print 'Error in HF! Sleeping for', stdsleep
+                if time.time() - lastsleep > 360:
+                    stdsleep = 4
                 time.sleep(stdsleep)
-                if stdsleep <= 300:
-                    stdsleep *= 2
             except KeyboardInterrupt:
                 break
                 raise Exception('Streaming Cancelled')
         
     def runLF():
-        stdsleep=4
+        lastsleep=time.time()
+        stdsleep=1
         while True:
             try:
                 print 'LF listener init'
@@ -120,34 +124,46 @@ def main():
                 listenLF = SListener(apiSteph,'LowFreq' )
                 streamLF = tweepy.Stream(authSteph, listenLF)
                 print 'lf listener stream'
+                lastsleep=time.time()
                 streamLF.filter(track=trackLF,languages=['en'])
             except Exception, e:
+                if stdsleep <= 300:
+                    stdsleep *= 2
+                else:
+                    stdsleep=300
                 print e
                 logging.warning(e)
                 print 'Error in LF! Sleeping for', stdsleep
+                if time.time() - lastsleep > 360:
+                    stdsleep = 4
                 time.sleep(stdsleep)
-                if stdsleep <= 300:
-                    stdsleep *= 2
             except KeyboardInterrupt:
                 break
                 raise Exception('Streaming Cancelled')
 
     def runAll():
-        stdsleep=4
+        lastsleep=time.time()
+        stdsleep=1
         while True:
             try:
                 print 'Sample listener init'
                 listenAll = SListener(apiHoward,'All' )
                 streamAll = tweepy.Stream(authHoward, listenAll)
                 print 'sample stream'
+                lastsleep=time.time()
+                lastsleep = time.time()
                 streamAll.sample(languages=['en'])
             except Exception, e:
+                if stdsleep <= 300:
+                    stdsleep *= 2
+                else:
+                    stdsleep=300
                 print e
                 logging.warning(e)
                 print 'Error in sample! Sleeping for', stdsleep
+                if time.time() - lastsleep > 360:
+                    stdsleep = 4
                 time.sleep(stdsleep)
-                if stdsleep <= 300:
-                    stdsleep *= 2
             except KeyboardInterrupt:
                 break
                 raise Exception('Streaming Cancelled')
