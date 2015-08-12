@@ -99,7 +99,7 @@ def main():
     def runHF():
         while True:
             try:
-                trackHF = [u"Apple",u"iphone",u"iOs",u"itunes",u"macbook",u"ipad",u"@apple",u"#apple",u"$AAPL",u"Google",u"@google",u"#alphabet" "#google",u"#GOOGL",u"Microsoft",u"Windows",u"@microsoft",u"#microsoft",u"#MSFT",u"Berkshire",u"Warren",u"Buffet",u"@Berkshire",u"Hathaway",u"@warrenbuffet",u"#BerkshireHathaway",u"#BRK/B",u"Exxon",u"@exxon",u"#exxon",u"#XOM",u"WellsFargo",u"@WellsFargo",u"#WellsFargo",u"#WFC",u"johnson&johnson",u"@JNJNews",u"@JNJCares",u"#JNJ",u"facebook",u"@facebook",u"#facebook",u"#FB"]
+                trackHF = [u"Apple",u"iphone",u"iOs",u"itunes",u"macbook",u"ipad",u"@apple",u"#apple",u"$AAPL",u"Google",u"@google",u"#alphabet" "#google",u"#GOOGL",u"Microsoft",u"Windows",u"@microsoft",u"#microsoft",u"#MSFT",u"Berkshire Hathaway",u"Warren Buffet",u"@BerkshireHathaway",u"@warrenbuffet",u"#BerkshireHathaway",u"#BRK/B",u"Exxon",u"@exxon",u"#exxon",u"#XOM",u"WellsFargo",u"@WellsFargo",u"#WellsFargo",u"#WFC",u"johnson&johnson",u"@JNJNews",u"@JNJCares",u"#JNJ",u"facebook",u"@facebook",u"#facebook",u"#FB"]
                 listenHF = SListener(apiHank,'HighFreq')
                 streamHF = tweepy.Stream(authHank, listenHF)
                 streamHF.filter(track=trackHF,languages=['en'])
