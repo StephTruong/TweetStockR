@@ -100,16 +100,17 @@ def main():
                 lastsleep=time.time()
                 streamHF.filter(track=trackHF,languages=['en'])
             except Exception, e:
-                if stdsleep <= 300:
-                    stdsleep *= 2
-                else:
-                    stdsleep=300
                 print e
-                logging.warning(e)
-                print 'Error in HF! Sleeping for', stdsleep
-                if time.time() - lastsleep > 360:
-                    stdsleep = 4
-                time.sleep(stdsleep)
+                if e != "database error: collection dropped between getMore calls":
+                    if stdsleep <= 300:
+                        stdsleep *= 2
+                    else:
+                        stdsleep=300
+                    logging.warning(e)
+                    print 'Error in HF! Sleeping for', stdsleep
+                    if time.time() - lastsleep > 360:
+                        stdsleep = 4
+                    time.sleep(stdsleep)
             except KeyboardInterrupt:
                 break
                 raise Exception('Streaming Cancelled')
@@ -127,16 +128,17 @@ def main():
                 lastsleep=time.time()
                 streamLF.filter(track=trackLF,languages=['en'])
             except Exception, e:
-                if stdsleep <= 300:
-                    stdsleep *= 2
-                else:
-                    stdsleep=300
                 print e
-                logging.warning(e)
-                print 'Error in LF! Sleeping for', stdsleep
-                if time.time() - lastsleep > 360:
-                    stdsleep = 4
-                time.sleep(stdsleep)
+                if e != "database error: collection dropped between getMore calls":
+                    if stdsleep <= 300:
+                        stdsleep *= 2
+                    else:
+                        stdsleep=300
+                    logging.warning(e)
+                    print 'Error in LF! Sleeping for', stdsleep
+                    if time.time() - lastsleep > 360:
+                        stdsleep = 4
+                    time.sleep(stdsleep)
             except KeyboardInterrupt:
                 break
                 raise Exception('Streaming Cancelled')
@@ -154,16 +156,17 @@ def main():
                 lastsleep = time.time()
                 streamAll.sample(languages=['en'])
             except Exception, e:
-                if stdsleep <= 300:
-                    stdsleep *= 2
-                else:
-                    stdsleep=300
                 print e
-                logging.warning(e)
-                print 'Error in sample! Sleeping for', stdsleep
-                if time.time() - lastsleep > 360:
-                    stdsleep = 4
-                time.sleep(stdsleep)
+                if e != "database error: collection dropped between getMore calls":
+                    if stdsleep <= 300:
+                        stdsleep *= 2
+                    else:
+                        stdsleep=300
+                    logging.warning(e)
+                    print 'Error in sample! Sleeping for', stdsleep
+                    if time.time() - lastsleep > 360:
+                        stdsleep = 4
+                    time.sleep(stdsleep)
             except KeyboardInterrupt:
                 break
                 raise Exception('Streaming Cancelled')
@@ -202,3 +205,4 @@ def main():
 if __name__ == '__main__':
     logging.basicConfig(filename='stream.log', level=logging.DEBUG)
     main()
+
