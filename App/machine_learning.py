@@ -5,7 +5,9 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.externals import joblib
 import time
+import csv
 from databases import insert_into_sentiment_table
+
 
 def get_stock_symbols(fname = 'picklejar/tickers.pickle'):
 	with open(fname, 'rb') as f:
@@ -51,33 +53,55 @@ def ml_process_tweet(tweet, cv, nb, symbols ):
 	comps = check_for_companies_and_retweets(transformed_tweet, cv.vocabulary_, symbols)
 	return (tweet, score, comps)
 
+def train_sentiment_model():
+	with open('../training.1600000.processed.noemoticon.csv','rb') as newdata:
+		data=[]
+		scores=[]
+		failed=0
+		reader = csv.reader(newdata)
+		for line in reader:
+			try:
+				data.append(line[5].decode('utf-8'))
+				scores.append(int(line[0]))
+			except:
+				failed += 1
+	print failed
+	print len(data)
+	print len(scores)
+
+	# data.append()
+
+	np.random.seed(100)
+	sample_ids = np.random.choice(len(data), int(len(data) * .9), replace=False)
+
+	train_data, train_labels = np.array(data)[sample_ids], np.array(scores)[sample_ids]
+	dev_data, dev_labels = np.array(data)[~sample_ids], np.array(scores)[~sample_ids]
+
+	cv = CountVectorizer(min_df=1, preprocessor = tweet_preprocessor)
+
+	import pickle
+	
+	symbols = get_stock_symbols()
+
+	string = ' '.join(symbols)
+	# print data[-3:]
+	data.append(string)
+	print data[-3:]
+
+	print 'fitting'
+	formatted_data = cv.fit_transform(np.array(data))
+
+	joblib.dump(cv, 'picklejar/count_vectorizer-081215.pickle')
+
+	print 'training'
+	train_transformed = cv.transform(train_data)
+	nb = MultinomialNB()
+	nb.fit(train_transformed, train_labels)
+	
+	joblib.dump(nb, 'picklejar/naive_bayes-081215.pickle')
 
 
 if __name__=="__main__":
-	cv = get_countvectorizer()
-	nb = get_naivebayes()
+	pass
+	# train_sentiment_model()
 
-	newthing = cv.transform(['I am a wonderful goat AAPL MRK, mnst'])
-	print newthing.indices
-	names = cv.get_feature_names()
-	for i in newthing.indices:
-		print i, names[i]
-	print cv.vocabulary_['aapl']
-	print cv.vocabulary_['rt']
-	print nb.predict(newthing)
-	start = time.time()
-	iters = 0
-	symbols = get_stock_symbols()
-	# for s in symbols:
-	# 	print s
-	try:
-		while True:
-			newthing = cv.transform(['I am a truculent goat AAPL MRK, mnst'])
-			print check_for_companies(newthing, cv.vocabulary_, symbols)
-			print nb.predict(newthing)
-			iters += 1
-	except KeyboardInterrupt:
-		end = time.time() - start
-		print iters, 'iters in ', end, 'seconds. Avg', float(iters)/end, 'tweets per second'
-
-	# print get_stock_symbols()

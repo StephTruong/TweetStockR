@@ -59,13 +59,13 @@ def upsert_tweet(coll, tweet, bucket):
 if __name__=="__main__":
 	logging.basicConfig(filename='db.log', level=logging.DEBUG)
 	pass
-	## SET UP
-	# conn = getsqlite('db/stocks.sqlite3')
-	# cur = conn.cursor()
-	# cur.execute("DROP TABLE prices")
-	# cur.execute("DROP TABLE sentiment")
-	# sqlite_setup(conn)
-	# conn.close()
+	# SET UP
+	conn = getsqlite('db/stocks.sqlite3')
+	cur = conn.cursor()
+	cur.execute("DROP TABLE prices")
+	cur.execute("DROP TABLE sentiment")
+	sqlite_setup(conn)
+	conn.close()
 
 	# TEST UPLOAD
 	# with open('test.json') as js:
