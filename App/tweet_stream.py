@@ -27,7 +27,7 @@ class SListener(StreamListener):
         logging.info("init done for:" +fprefix)
         self.mongo = get_mongo_conn()
         self.mongocoll = self.mongo['tweetstock'].temptweets
-        self.sql = getsqlite()
+        self.sql = getsqlite('tweets.sqlite3')
         self.cursor = self.sql.cursor()
         self.bucket = get_or_create_bucket('tweetstock-tweets')
         self.symbols = get_stock_symbols()

@@ -62,8 +62,10 @@ if __name__=="__main__":
 	# SET UP
 	conn = getsqlite('db/stocks.sqlite3')
 	cur = conn.cursor()
-	cur.execute("DROP TABLE prices")
-	cur.execute("DROP TABLE sentiment")
+	cur.execute("DROP TABLE if exists prices")
+	conn = getsqlite('db/tweets.sqlite3')
+	cur = conn.cursor()
+	cur.execute("DROP TABLE if exists sentiment")
 	sqlite_setup(conn)
 	conn.close()
 

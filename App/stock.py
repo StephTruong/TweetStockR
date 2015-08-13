@@ -43,7 +43,7 @@ def stock_prices_run_forever(conn, tickers):
 
 if __name__=="__main__":
 	logging.basicConfig(filename='stock.log', level=logging.DEBUG)
-	sqlconn = getsqlite()
+	sqlconn = getsqlite('stocks2.sqlite3')
 	tickers = get_tickers()
 
 	stock_prices_run_forever(sqlconn, tickers)
