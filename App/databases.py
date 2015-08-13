@@ -60,9 +60,10 @@ if __name__=="__main__":
 	logging.basicConfig(filename='db.log', level=logging.DEBUG)
 	pass
 	# SET UP
-	conn = getsqlite('db/stocks.sqlite3')
+	conn = getsqlite('db/stocks2.sqlite3')
 	cur = conn.cursor()
 	cur.execute("DROP TABLE if exists prices")
+	sqlite_setup(conn)
 	conn = getsqlite('db/tweets.sqlite3')
 	cur = conn.cursor()
 	cur.execute("DROP TABLE if exists sentiment")
