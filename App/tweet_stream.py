@@ -6,7 +6,7 @@ from auth.twitter_credentials import HANK_TWITTER_API_CREDENTIALS ,  STEPH_TWITT
 from multiprocessing import Process,Pool
 from time import sleep
 from machine_learning import ml_process_tweet, get_stock_symbols, get_countvectorizer, get_naivebayes, tweet_preprocessor
-from databases import getsqlite, get_mongo_conn, insert_into_sentiment_table, upsert_tweet
+from databases import getsqlite, get_mongo_conn, insert_into_sentiment_table, upsert_tweet, insert_into_sentiment_coll
 from aws import get_s3_connection, get_or_create_bucket
 
 
