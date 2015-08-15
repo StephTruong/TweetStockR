@@ -88,9 +88,11 @@ def get_mongo_conn():
 
 def dump_collection_to_s3(coll, bucket, basename):
 	logging.info('dumping collection to s3')
+	print('dumping collection to s3')
 	name = basename + "_" + datetime.now().strftime('%Y%m%d%H%M%S') + '.json'
 	data = list(coll.find())
 	logging.info('Dropping mongo')
+	print('Dropping mongo')
 	coll.drop()
 	write_string_to_key(bucket, name, json.dumps(data, ensure_ascii=False))
 
