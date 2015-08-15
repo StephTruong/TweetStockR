@@ -48,7 +48,7 @@ def insert_into_sentiment_coll(coll, mltweet):
 			coll.insert_one(data)
 	else: 
 		data = {
-			'id':tweet['id'],
+			 'id':tweet['id'],
 			 'score': score[0],
 			 'datetime': datetime.now(),
 			 'company': None,
@@ -97,9 +97,8 @@ def dump_collection_to_s3(coll, bucket, basename):
 dict_extract = lambda x, y: dict(zip(x, map(y.get, x)))
 # dict_extract snippet from http://code.activestate.com/recipes/115417-subset-of-a-dictionary/
 
-
 def upsert_tweet(coll, tweet, bucket, dump_after=2500):
-	status = coll.update( {'id': tweet['id']}, dict_extract( ['id','text','timestamp_ms','created_at'], tweet), upsert=True )
+	status = coll.update( {'_id': tweet['id']}, dict_extract( ['id','text','timestamp_ms','created_at'], tweet), upsert=True )
 	if coll.count() >= dump_after:
 		dump_collection_to_s3(coll, bucket, 'tweetdump')
 	return status['updatedExisting']
