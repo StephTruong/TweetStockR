@@ -29,7 +29,7 @@ class SListener(StreamListener):
         self.upsertcoll = self.mongo['tweetstock'].temptweets
         self.sentimentcoll = self.mongo['tweetstock'].sentiment
         # self.sql = getsqlite('tweets.sqlite3')
-        self.cursor = self.sql.cursor()
+        # self.cursor = self.sql.cursor()
         self.bucket = get_or_create_bucket('tweetstock-tweets')
         self.symbols = get_stock_symbols()
         self.cv = get_countvectorizer()
