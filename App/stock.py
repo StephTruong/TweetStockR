@@ -33,6 +33,7 @@ def stock_prices_run_forever(coll, tickers):
 			### TEMPORARILY COMMENTED OUT !!!!!!!!!
 			# if now.hour >= 9 and (now.hour < 16 or (now.hour <= 16 and now.minute <= 30)): # only get data during stock exchange hours with half hour window on either side
 				logging.debug("Acquiring Stock Data")
+				print("Acquiring Stock Data")
 				start = time.time()
 				for t in tickers:
 					get_stock_prices(coll, t, sess)

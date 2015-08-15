@@ -99,7 +99,7 @@ dict_extract = lambda x, y: dict(zip(x, map(y.get, x)))
 
 
 def upsert_tweet(coll, tweet, bucket, dump_after=2500):
-	status = coll.update( {'_id': tweet['id']}, dict_extract( ['id','text','timestamp_ms','created_at'], tweet), upsert=True )
+	status = coll.update( {'id': tweet['id']}, dict_extract( ['id','text','timestamp_ms','created_at'], tweet), upsert=True )
 	if coll.count() >= dump_after:
 		dump_collection_to_s3(coll, bucket, 'tweetdump')
 	return status['updatedExisting']
