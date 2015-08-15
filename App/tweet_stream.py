@@ -26,8 +26,9 @@ class SListener(StreamListener):
         # self.delout  = open('output/delete.txt', 'a')
         logging.info("init done for:" +fprefix)
         self.mongo = get_mongo_conn()
-        self.mongocoll = self.mongo['tweetstock'].temptweets
-        self.sql = getsqlite('tweets.sqlite3')
+        self.upsertcoll = self.mongo['tweetstock'].temptweets
+        self.sentimentcoll = self.mongo['tweetstock'].sentiment
+        # self.sql = getsqlite('tweets.sqlite3')
         self.cursor = self.sql.cursor()
         self.bucket = get_or_create_bucket('tweetstock-tweets')
         self.symbols = get_stock_symbols()
@@ -50,9 +51,10 @@ class SListener(StreamListener):
         
     def on_status(self, status):
         tweet = json.loads(status)
-        if not upsert_tweet(self.mongocoll, tweet, self.bucket):
+        if not upsert_tweet(self.upsertcoll, tweet, self.bucket):
             processed = ml_process_tweet(tweet, self.cv, self.nb, self.symbols)
-            insert_into_sentiment_table(self.sql, self.cursor, processed)
+            insert_into_sentiment_coll(self.sentimentcoll, processed)
+            # insert_into_sentiment_table(self.sql, self.cursor, processed)
         self.count += 1
         if self.count % 50 == 0:
             print self.fprefix, self.count, 'tweets in', time.time() - self.start_time, 'seconds', float(self.count) / (time.time() - self.start_time)
@@ -177,28 +179,20 @@ def main():
 
     
     try: 
-            #not sure how to pass keyword argument so im going brute when i call process class.
-        pHF= Process(target=runHF)
-        pLF= Process(target=runLF)
-        pAll= Process(target=runAll)
-        pHF.daemon = True
-        pLF.daemon = True
-        pAll.daemon = True
-        pHF.start()
-        pLF.start()
-        pAll.start()
-        pHF.join()
-        pLF.join()
-        pAll.join()
+        procs = [Process(target=run) for run in [runHF, runLF, runAll]]
+        for proc in procs:
+            proc.daemon = True
+        for proc in procs:
+            proc.start()
+        for proc in procs:
+            proc.join()
     except Exception, e:
         logging.warning("stream error!", e)
-        pHF.join()
-        pLF.join()
-        pAll.join()
+        for proc in procs:
+            proc.join()
     except KeyboardInterrupt:
-        pHF.terminate()
-        pLF.terminate()
-        pAll.terminate()
+        for proc in procs:
+            proc.terminate()
 
 
 if __name__ == '__main__':
