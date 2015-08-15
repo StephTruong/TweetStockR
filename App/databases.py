@@ -39,7 +39,7 @@ def insert_into_sentiment_coll(coll, mltweet):
 	if len(comps[1]) > 0: # if multiple companies were identified
 		for comp in comps[1]:
 			data = {
-			'_id':tweet['id'],
+			'id':tweet['id'],
 			'score': score[0],
 			'datetime': datetime.now(),
 			'company': comp,
@@ -48,7 +48,7 @@ def insert_into_sentiment_coll(coll, mltweet):
 			coll.insert_one(data)
 	else: 
 		data = {
-			'_id':tweet['id'],
+			'id':tweet['id'],
 			 'score': score[0],
 			 'datetime': datetime.now(),
 			 'company': None,
