@@ -124,4 +124,4 @@ def main(outfile):
 				print 'Stock not found '+str(ticker) 
 	  
 if __name__ == '__main__':
-	main()
+	main('predictions.csv')
