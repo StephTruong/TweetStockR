@@ -34,9 +34,8 @@ def main(outfile):
 		endtime=dt.now()-timedelta(minutes=0)
 
 		# Search for distinct stocks that were recently tweeted
-		for item in sentiment.find({'datetime':{'$lt':endtime, '$gt':starttime}}):
+		for item in sentiment.find({'datetime':{'$lt':endtime, '$gt':starttime}, 'company':{'$ne':None}}):
 			try:
-				print item
 				countSentiment = 0
 				countStock = 0
 				ticker = item['company']
