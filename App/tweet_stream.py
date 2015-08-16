@@ -1,5 +1,5 @@
 import logging
-import json, time, sys
+import json, time, sys, os
 import tweepy
 from tweepy import StreamListener
 from auth.twitter_credentials import HANK_TWITTER_API_CREDENTIALS ,  STEPH_TWITTER_API_CREDENTIALS, HOWARD_TWITTER_API_CREDENTIALS
@@ -197,5 +197,7 @@ def main():
 
 if __name__ == '__main__':
     logging.basicConfig(filename='stream.log', level=logging.DEBUG)
+    os.environ['TZ'] = 'US/Eastern' #set timezone to EST for US market
+    time.tzset()
     main()
 

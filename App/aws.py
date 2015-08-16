@@ -7,6 +7,10 @@ import logging
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 
+DOCSTRING="""
+	Helper functions for working with Amazon S3 through boto
+"""
+
 def get_s3_connection(authfile='auth/aws.json'):
 	print os.getcwd()
 	with open(authfile, 'rb') as auth:
