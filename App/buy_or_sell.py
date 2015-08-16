@@ -39,7 +39,7 @@ def main(outfile):
 				print item
 				countSentiment = 0
 				countStock = 0
-				ticker = item['name']
+				ticker = item['company']
 				sumNewSentiment = 0
 				sumOldSentiment = 0
 				countNewSentiment = 0
