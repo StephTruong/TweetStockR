@@ -17,7 +17,7 @@ if __name__=="__main__":
 	# tickers = get_tickers()
 	# sqlconn = getsqlite()
 
-	arguments = [('python','tweet_stream.py'), ('python','stock.py')]
+	arguments = [('python','tweet_stream.py'), ('python','stock.py'), ('python','buy_or_sell.py')]
 
 	processes = [Process(target=worker, args=(args,)) for args in arguments]
 	for p in processes:
