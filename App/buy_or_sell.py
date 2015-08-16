@@ -31,12 +31,12 @@ def main(outfile):
 		print 'Starting Predictions'
 
 		starttime=dt.now()-timedelta(hours=4)
-		endtime=dt.now()-timedelta(minutes=1)
+		endtime=dt.now()-timedelta(minutes=0)
 
-		# Search for distinct stocks that were Tweeted
+		# Search for distinct stocks that were recently tweeted
 		for item in sentiment.find({'datetime':{'$lt':endtime, '$gt':starttime}}):
-		# for item1 in c.execute('SELECT DISTINCT company FROM sentiment where datetime BETWEEN '+dt.strftime(starttime,datef2)+' AND '+dt.strftime(endtime,datef2)):
 			try:
+				print item
 				countSentiment = 0
 				countStock = 0
 				ticker = item['name']
