@@ -29,6 +29,7 @@ def main(outfile):
 		print "Sleeping "+str(sleeptime)+"sec until start of a minute"
 		time.sleep(sleeptime)
 		print 'Starting Predictions'
+		start = time.time()
 
 		starttime=dt.now()-timedelta(hours=4)
 		endtime=dt.now()-timedelta(minutes=0)
@@ -36,7 +37,6 @@ def main(outfile):
 		# Search for distinct stocks that were recently tweeted
 		for item in sentiment.find({'datetime':{'$lt':endtime, '$gt':starttime}, 'company':{'$ne':None}}).distinct('company'):
 			try:
-				print item
 				countSentiment = 0
 				countStock = 0
 				ticker = item
@@ -50,15 +50,15 @@ def main(outfile):
 				countOldStock = 0
 
 				# Check to see if tweet record is 200 or greater
-				recent_sentiment = sentiment.find({'company': ticker, 'datetime': {'$lt':endtime, '$gt':starttime}}).limit(1000).sort('datetime', pmg.DESCENDING)
-				if recent_sentiment.count() < 100:
+				recent_sentiment = sentiment.find({'company': ticker}).limit(1000).sort('datetime', pmg.DESCENDING)
+				if recent_sentiment.count() < 101:
 					continue
 				print ('Company: ' + str(ticker) + ', Tweet record: ' + str(recent_sentiment.count()))
 
 
 				# Check to see if Stock prices are available
 				recent_prices = prices.find({'name': ticker.upper(), 'datetime': {'$lt':endtime, '$gt':starttime}}).limit(720)
-				if recent_prices < 720:
+				if recent_prices < 61:
 					print ('Company: ' + str(ticker) + ', Stock record not found.')
 					continue
 
@@ -122,6 +122,8 @@ def main(outfile):
 
 			except ZeroDivisionError:
 				print 'Stock not found '+str(ticker) 
+
+		print "predictions took", time.time() - start, 'seconds'
 	  
 if __name__ == '__main__':
 	main('predictions.csv')
