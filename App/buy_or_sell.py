@@ -7,6 +7,7 @@ import sys
 from databases import get_mongo_conn
 import pymongo as pmg
 import os
+import multiprocessing
 
 reload(sys)
 sys.setdefaultencoding('UTF8')
@@ -21,10 +22,10 @@ def main(outfile):
 	sentiment = conn['tweetstock'].sentiment
 	predictions = conn['tweetstock'].predictions
 
-	with open(outfile, 'ab') as prediction_file:
+	while True: # doing a infinite loop
 
-	  while True: # doing a infinite loop
-		
+		pool = multiprocessing.Pool()
+
 		sleeptime = 60 - dt.now().second
 		print "Sleeping "+str(sleeptime)+"sec until start of a minute"
 		time.sleep(sleeptime)
@@ -35,11 +36,17 @@ def main(outfile):
 		endtime=dt.now()-timedelta(minutes=0)
 
 		# Search for distinct stocks that were recently tweeted
-		for item in sentiment.find({'datetime':{'$lt':endtime, '$gt':starttime}, 'company':{'$ne':None}}).distinct('company'):
+		recent_tickers = sentiment.find({'datetime':{'$lt':endtime, '$gt':starttime}, 'company':{'$ne':None}}).distinct('company')
+
+		def get_predictions(ticker):
+			conn = get_mongo_conn()
+			prices = conn['tweetstock'].prices
+			sentiment = conn['tweetstock'].sentiment
+			predictions = conn['tweetstock'].predictions
+
 			try:
 				countSentiment = 0
 				countStock = 0
-				ticker = item
 				sumNewSentiment = 0
 				sumOldSentiment = 0
 				countNewSentiment = 0
@@ -55,15 +62,13 @@ def main(outfile):
 					continue
 				print ('Company: ' + str(ticker) + ', Tweet record: ' + str(recent_sentiment.count()))
 
-
 				# Check to see if Stock prices are available
 				recent_prices = prices.find({'name': ticker.upper()}).limit(720).sort('recorded', pmg.DESCENDING)
-				if recent_prices < 61:
+				if recent_prices.count() < 61:
 					print ('Company: ' + str(ticker) + ', Stock record not found.')
 					continue
 
 				# Searches for the last 1000 sentiment readings
-
 				for sent in recent_sentiment:
 					countSentiment += 1
 					if countSentiment < 101:
@@ -97,7 +102,6 @@ def main(outfile):
 				print 'STOCK PRICE: ' + str(ticker) + ' New: ' + str(averageNewStock) + ' Old: ' + str(averageOldStock)
 				#print datetime.datetime.now()
 
-				print
 				if averageNewSentiment > averageOldSentiment and averageNewStock > averageOldStock:
 					prediction = 'BUY'
 				elif averageNewSentiment < averageOldSentiment and averageNewStock < averageOldStock:
@@ -118,10 +122,15 @@ def main(outfile):
 				predictions.insert_one({'stock': ticker, 'datetime': dt.now(), 'prediction': prediction, 'streak': streak_n})
 				out = ','.join([str(i) for i in [dt.now().strftime("%Y%m%d%H%M%S"), ticker, prediction, streak_n]]) + '\n'
 				print out
-				prediction_file.write( out )
+				# prediction_file.write( out )
 
 			except ZeroDivisionError:
-				print 'Stock not found '+str(ticker) 
+				print 'Stock not found '+str(ticker)
+
+			conn.close()
+			return
+
+		pool.map_async(func=get_predictions, iterable=recent_tickers).get(6000)
 
 		print "predictions took", time.time() - start, 'seconds'
 	  
