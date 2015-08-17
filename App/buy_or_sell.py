@@ -57,7 +57,7 @@ def main(outfile):
 
 
 				# Check to see if Stock prices are available
-				recent_prices = prices.find({'name': ticker.upper(), 'datetime': {'$lt':endtime, '$gt':starttime}}).limit(720)
+				recent_prices = prices.find({'name': ticker.upper()}).limit(720).sort('recorded', pmg.DESCENDING)
 				if recent_prices < 61:
 					print ('Company: ' + str(ticker) + ', Stock record not found.')
 					continue
@@ -73,8 +73,8 @@ def main(outfile):
 						sumOldSentiment += sent['score']
 						countOldSentiment += 1
 
-				averageNewSentiment = sumNewSentiment / countNewSentiment
-				averageOldSentiment = sumOldSentiment / countOldSentiment
+				averageNewSentiment = float(sumNewSentiment) / countNewSentiment
+				averageOldSentiment = float(sumOldSentiment) / countOldSentiment
 				
 				# Finds the average of the first 200 and last 800 sentiment readings
 				print (ticker + ' New: ' + str(averageNewSentiment) + ' Old: ' + str(averageOldSentiment))
@@ -90,8 +90,8 @@ def main(outfile):
 						sumOldStock += price['price']
 						countOldStock += 1
 
-				averageNewStock = sumNewStock / countNewStock
-				averageOldStock = sumOldStock / countOldStock
+				averageNewStock = float(sumNewStock) / countNewStock
+				averageOldStock = float(sumOldStock) / countOldStock
 
 				# Finds the average price of the first 5 minutes and last 55 minute
 				print str(ticker) + ' New: ' + str(averageNewStock) + ' Old: ' + str(averageOldStock)

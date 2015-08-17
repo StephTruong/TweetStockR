@@ -27,7 +27,7 @@ def insert_into_price_coll(coll, ticker):
 				'name': tick['t'],
 				'recorded': datetime.now(),
 				'datetime': datetime.strptime(tick['lt_dts'], dt_fmt),
-				'price': tick['l']}
+				'price': float(tick['l'])}
 				)
 		except Exception:
 			pass
@@ -40,7 +40,7 @@ def insert_into_sentiment_coll(coll, mltweet):
 		for comp in comps[1]:
 			data = {
 			'id':tweet['id'],
-			'score': score[0],
+			'score': int(score[0]),
 			'datetime': datetime.now(),
 			'company': comp,
 			'retweet': comps[0]
@@ -49,7 +49,7 @@ def insert_into_sentiment_coll(coll, mltweet):
 	else: 
 		data = {
 			 'id':tweet['id'],
-			 'score': score[0],
+			 'score': int(score[0]),
 			 'datetime': datetime.now(),
 			 'company': None,
 			 'retweet': comps[0]
