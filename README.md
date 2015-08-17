@@ -10,6 +10,8 @@ To run the app:
 
 This main execution file call three subprocesses that run tweet acquisition/parsing, stock price acquisition, and buy/sell projection.
 
+### Requirements
+
 Python Requirements:
 ```
 Python 2.7+
@@ -20,7 +22,13 @@ sklearn # sentiment analysis
 tweepy # tweet acquisition
 boto # aws interface
 pymongo # mongodb interface
-FilechunkIO # for aws backups
+```
+
+System Requirements:
+```
+multi-core processor for best results / scaling up
+MongoDB 2.0+
+aws cli # configured for s3 backups
 ```
 
 Also ensure that a local MongoDB cluster is set up before running.
@@ -37,5 +45,5 @@ This folder must also contain twitter credentials for any twitter accounts that 
 
 * `tweet_stream.py` takes in three streams simultaneously from Twitter via the Tweepy Python library. These tweets are stored to a locally-running instance of MongoDB.
 * `stock.py` acquires stock prices from the deprecated, but still active, Google Finance API endpoint. Google uses this API to produce stock price charts on their homepage, so it seems unlikely this API endpoint will stop responding until they roll out a new endpoint for their own usage.
-* `buy_or_sell.py` is the stock momentum model calculator. It analyzes recent stock prices and Twitter history to determine whether or not both sentiment and prices are moving the same direction. It emits suggestions to a collection in MongoDB.
+* `buy_or_sell.py` is the stock momentum model calculator. It analyzes recent stock prices and Twitter history to determine whether or not both sentiment and prices are moving the same direction. It emits suggestions to a collection in MongoDB. Prediction is parallelized using the `multiprocessing` library in Python.
 

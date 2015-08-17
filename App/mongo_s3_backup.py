@@ -19,6 +19,7 @@ def compress_mongodump(dumpdir='mongodumpdir', archive='mongodump_cmp'):
 	print 'Compressing Backup'
 	shutil.make_archive('mongodump_cmp', 'gztar', dumpdir) 
 
+# DEPRECATED
 def send_backup_to_s3(bucketname='tweetstock-mongo-dump', keyname='mongodump_cmp.tar.gz', archive='mongodump_cmp.tar.gz'):
 
 	"""chunked upload to S3
@@ -81,7 +82,7 @@ if __name__=="__main__":
 	dump_mongo(dumpargs=['--db', 'tweetstock'])
 	compress_mongodump()
 	# send_backup_to_s3()
-	subprocess.call( ['aws', 's3', 'cp', 'mongodump_cmp.tar.gz', 's3://tweetstock-mongo-dump'] )
+	subprocess.call( ['aws', 's3', 'cp', 'mongodump_cmp' + dt.now().strftime('%Y%m%d%H%M%S') +  '.tar.gz', 's3://tweetstock-mongo-dump'] )
 
 	# RESTORE FROM ARCHIVE
 	# download_archive_from_s3()
