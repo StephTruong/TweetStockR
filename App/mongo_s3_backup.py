@@ -80,7 +80,8 @@ if __name__=="__main__":
 	# ARCHIVE
 	dump_mongo(dumpargs=['--db', 'tweetstock'])
 	compress_mongodump()
-	send_backup_to_s3()
+	# send_backup_to_s3()
+	subprocess.call( ['aws', 's3', 'cp', 'mongodump_cmp.tar.gz', 's3://tweetstock-mongo-dump'] )
 
 	# RESTORE FROM ARCHIVE
 	# download_archive_from_s3()
