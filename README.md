@@ -46,4 +46,5 @@ This folder must also contain twitter credentials for any twitter accounts that 
 * `tweet_stream.py` takes in three streams simultaneously from Twitter via the Tweepy Python library. These tweets are stored to a locally-running instance of MongoDB.
 * `stock.py` acquires stock prices from the deprecated, but still active, Google Finance API endpoint. Google uses this API to produce stock price charts on their homepage, so it seems unlikely this API endpoint will stop responding until they roll out a new endpoint for their own usage.
 * `buy_or_sell.py` is the stock momentum model calculator. It analyzes recent stock prices and Twitter history to determine whether or not both sentiment and prices are moving the same direction. It emits suggestions to a collection in MongoDB. Prediction is parallelized using the `multiprocessing` library in Python.
+* 'extract_predictions.py' saves three JSON files locally containing stock prices, sentiment, and buy/sell suggestions for the previous 24 hours.
 
