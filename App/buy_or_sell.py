@@ -118,7 +118,7 @@ def main(outfile):
 
 	while True: # doing a infinite loop
 
-		pool = multiprocessing.Pool()
+		pool = multiprocessing.Pool(4)
 
 		# sleeptime = 60 - dt.now().second
 		# print "Sleeping "+str(sleeptime)+"sec until start of a minute"
