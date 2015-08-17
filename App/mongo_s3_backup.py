@@ -17,7 +17,10 @@ def dump_mongo(outname = 'mongodumpdir', dumpargs = []):
 def compress_mongodump(dumpdir='mongodumpdir', archive='mongodump_cmp'):
 	"""compress directory to tar.gz file"""
 	print 'Compressing Backup'
-	shutil.make_archive('mongodump_cmp', 'gztar', dumpdir) 
+	dumpname = archive + dt.now().strftime('%Y%m%d%H%M%S')
+	shutil.make_archive(dumpname, 'gztar', dumpdir)
+	return dumpname + '.tar.gz'
+
 
 # DEPRECATED
 def send_backup_to_s3(bucketname='tweetstock-mongo-dump', keyname='mongodump_cmp.tar.gz', archive='mongodump_cmp.tar.gz'):
@@ -66,13 +69,13 @@ def restore_mongo_from_archive(archive='mongodump_cmp.tar.gz', dumpdir = 'mongod
 	subprocess.call(['mongorestore', dumpdir] + dumpargs)
 
 
-def clean_up_collections(conn, daysback=2):
-	prices = conn['tweetstock'].prices
-	sentiment = conn['tweetstock'].sentiment
+# def clean_up_collections(conn, daysback=2):
+# 	prices = conn['tweetstock'].prices
+# 	sentiment = conn['tweetstock'].sentiment
 
-	limit = dt.now() - timedelta(days=daysback)
+# 	limit = dt.now() - timedelta(days=daysback)
 
-	print dt.now(), limit
+# 	print dt.now(), limit
 
 
 
@@ -80,9 +83,9 @@ if __name__=="__main__":
 
 	# ARCHIVE
 	dump_mongo(dumpargs=['--db', 'tweetstock'])
-	compress_mongodump()
+	dumpname = compress_mongodump()
 	# send_backup_to_s3()
-	subprocess.call( ['aws', 's3', 'cp', 'mongodump_cmp' + dt.now().strftime('%Y%m%d%H%M%S') +  '.tar.gz', 's3://tweetstock-mongo-dump'] )
+	subprocess.call( ['aws', 's3', 'cp', dumpname, 's3://tweetstock-mongo-dump'] )
 
 	# RESTORE FROM ARCHIVE
 	# download_archive_from_s3()
