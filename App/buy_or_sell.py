@@ -77,7 +77,7 @@ def main(outfile):
 				averageOldSentiment = float(sumOldSentiment) / countOldSentiment
 				
 				# Finds the average of the first 200 and last 800 sentiment readings
-				print (ticker + ' New: ' + str(averageNewSentiment) + ' Old: ' + str(averageOldSentiment))
+				print ('SENTIMENT: ' + ticker + ' New: ' + str(averageNewSentiment) + ' Old: ' + str(averageOldSentiment))
 				#print datetime.datetime.now()
 
 				# Searches for the last 720 prices for the stock
@@ -94,7 +94,7 @@ def main(outfile):
 				averageOldStock = float(sumOldStock) / countOldStock
 
 				# Finds the average price of the first 5 minutes and last 55 minute
-				print str(ticker) + ' New: ' + str(averageNewStock) + ' Old: ' + str(averageOldStock)
+				print 'STOCK PRICE: ' + str(ticker) + ' New: ' + str(averageNewStock) + ' Old: ' + str(averageOldStock)
 				#print datetime.datetime.now()
 
 				print
