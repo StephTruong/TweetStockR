@@ -120,13 +120,9 @@ def main(outfile):
 
 		pool = multiprocessing.Pool(4)
 
-		# sleeptime = 60 - dt.now().second
-		# print "Sleeping "+str(sleeptime)+"sec until start of a minute"
-		# time.sleep(sleeptime)
-		# print 'Starting Predictions'
 		start = time.time()
 
-		starttime=dt.now()-timedelta(minutes=10)
+		starttime=dt.now()-timedelta(minutes=5)
 		endtime=dt.now()-timedelta(minutes=0)
 
 		# Search for distinct stocks that were recently tweeted
