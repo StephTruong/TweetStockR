@@ -136,7 +136,8 @@ def main(outfile):
 			print 'Making predictions for %d companies' % len(recent_tickers)
 			pool.map_async(func=get_predictions, iterable=recent_tickers).get(6000)
 		except KeyboardInterrupt:
-			pass
+			pool.terminate()
+			# raise KeyboardInterrupt('Stopped with KeyboardInterrupt')
 
 		print "predictions took", time.time() - start, 'seconds'
 	  
