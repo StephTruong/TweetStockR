@@ -126,13 +126,16 @@ def main(outfile):
 		# print 'Starting Predictions'
 		start = time.time()
 
-		starttime=dt.now()-timedelta(hours=4)
+		starttime=dt.now()-timedelta(minutes=10)
 		endtime=dt.now()-timedelta(minutes=0)
 
 		# Search for distinct stocks that were recently tweeted
 		recent_tickers = list(sentiment.find({'datetime':{'$lt':endtime, '$gt':starttime}, 'company':{'$ne':None}}).distinct('company'))
 
-		pool.map_async(func=get_predictions, iterable=recent_tickers).get(6000)
+		try:
+			pool.map_async(func=get_predictions, iterable=recent_tickers).get(6000)
+		except KeyboardInterrupt:
+			pass
 
 		print "predictions took", time.time() - start, 'seconds'
 	  
