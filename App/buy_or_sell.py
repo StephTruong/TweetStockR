@@ -130,6 +130,8 @@ def main(outfile):
 			conn.close()
 			return
 
+		print list(recent_tickers)
+		print type(recent_tickers)
 		pool.map_async(func=get_predictions, iterable=list(recent_tickers)).get(6000)
 
 		print "predictions took", time.time() - start, 'seconds'
