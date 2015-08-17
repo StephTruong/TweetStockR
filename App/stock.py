@@ -27,23 +27,23 @@ def stock_prices_run_forever(coll, tickers):
 	while True:
 		now = datetime.datetime.now()
 		sess = requests.session()
-		# if ((now.hour >= 9 and now.minute >=30) or (now.hour > 9)) and now.hour < 16: # only get data during stock exchange hours (no cushion)
-		try:
-			if True:
-			### TEMPORARILY COMMENTED OUT !!!!!!!!!
-			# if now.hour >= 9 and (now.hour < 16 or (now.hour <= 16 and now.minute <= 30)): # only get data during stock exchange hours with half hour window on either side
-				logging.debug("Acquiring Stock Data")
-				print("Acquiring Stock Data")
-				start = time.time()
-				for t in tickers:
-					get_stock_prices(coll, t, sess)
-				remaining = 5 - (time.time() - start)
-				if remaining > 0:
-					time.sleep(remaining)
-			else:
-				time.sleep(5)
-		except Exception:
-			pass
+		if ((now.hour >= 9 and now.minute >=30) or (now.hour > 9)) and now.hour < 16: # only get data during stock exchange hours (no cushion)
+			try:
+				if True:
+				### TEMPORARILY COMMENTED OUT !!!!!!!!!
+				# if now.hour >= 9 and (now.hour < 16 or (now.hour <= 16 and now.minute <= 30)): # only get data during stock exchange hours with half hour window on either side
+					logging.debug("Acquiring Stock Data")
+					print("Acquiring Stock Data")
+					start = time.time()
+					for t in tickers:
+						get_stock_prices(coll, t, sess)
+					remaining = 5 - (time.time() - start)
+					if remaining > 0:
+						time.sleep(remaining)
+				else:
+					time.sleep(5)
+			except Exception:
+				pass
 
 if __name__=="__main__":
 	logging.basicConfig(filename='stock.log', level=logging.DEBUG)
