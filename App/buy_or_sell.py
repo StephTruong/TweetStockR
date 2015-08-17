@@ -26,10 +26,10 @@ def main(outfile):
 
 		pool = multiprocessing.Pool()
 
-		sleeptime = 60 - dt.now().second
-		print "Sleeping "+str(sleeptime)+"sec until start of a minute"
-		time.sleep(sleeptime)
-		print 'Starting Predictions'
+		# sleeptime = 60 - dt.now().second
+		# print "Sleeping "+str(sleeptime)+"sec until start of a minute"
+		# time.sleep(sleeptime)
+		# print 'Starting Predictions'
 		start = time.time()
 
 		starttime=dt.now()-timedelta(hours=4)
@@ -59,14 +59,14 @@ def main(outfile):
 				# Check to see if tweet record is 200 or greater
 				recent_sentiment = sentiment.find({'company': ticker}).limit(1000).sort('datetime', pmg.DESCENDING)
 				if recent_sentiment.count() < 101:
-					continue
+					return
 				print ('Company: ' + str(ticker) + ', Tweet record: ' + str(recent_sentiment.count()))
 
 				# Check to see if Stock prices are available
 				recent_prices = prices.find({'name': ticker.upper()}).limit(720).sort('recorded', pmg.DESCENDING)
 				if recent_prices.count() < 61:
 					print ('Company: ' + str(ticker) + ', Stock record not found.')
-					continue
+					return
 
 				# Searches for the last 1000 sentiment readings
 				for sent in recent_sentiment:
