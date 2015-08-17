@@ -3,8 +3,13 @@
 from databases import get_mongo_conn
 import json
 import datetime as dt
+import os
+import time
 
 if __name__=="__main__":
+
+	os.environ['TZ'] = 'US/Eastern' #set timezone to EST for US market
+	time.tzset()
 
 	conn = get_mongo_conn()
 
