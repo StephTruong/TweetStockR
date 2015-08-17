@@ -14,7 +14,7 @@ def dump_mongo(outname = 'mongodumpdir', dumpargs = []):
 	"""call mongodb `mongodump` to create db backup"""
 	subprocess.call(['mongodump','--out', outname] + dumpargs) # add any additional arguments to cmd line call e.g. -v for verbose
 
-def compress_mongodump(dumpdir='tweetstock-mongo-dump', archive='mongodump_cmp'):
+def compress_mongodump(dumpdir='mongodumpdir', archive='mongodump_cmp'):
 	"""compress directory to tar.gz file"""
 	print 'Compressing Backup'
 	shutil.make_archive('mongodump_cmp', 'gztar', dumpdir) 

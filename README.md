@@ -13,13 +13,14 @@ This main execution file call three subprocesses that run tweet acquisition/pars
 Python Requirements:
 ```
 Python 2.7+
-requests
-numpy
-scipy
-tweepy
-sklearn
-boto
-pymongo
+requests # for stock acquisition
+numpy # sentiment analysis
+scipy # sentiment analysis
+sklearn # sentiment analysis
+tweepy # tweet acquisition
+boto # aws interface
+pymongo # mongodb interface
+FilechunkIO # for aws backups
 ```
 
 Also ensure that a local MongoDB cluster is set up before running.
