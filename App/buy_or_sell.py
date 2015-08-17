@@ -133,6 +133,7 @@ def main(outfile):
 		recent_tickers = list(sentiment.find({'datetime':{'$lt':endtime, '$gt':starttime}, 'company':{'$ne':None}}).distinct('company'))
 
 		try:
+			print 'Making predictions for %d companies' % len(recent_tickers)
 			pool.map_async(func=get_predictions, iterable=recent_tickers).get(6000)
 		except KeyboardInterrupt:
 			pass
