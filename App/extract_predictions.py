@@ -38,7 +38,7 @@ if __name__=="__main__":
 	print 'predictions'
 	with open('predictions.json','wb') as pr:
 		outlist=[]
-		for item in sentiment.find({'datetime':{'$gt':dt.datetime.now() - dt.timedelta(days=1)}},{'_id':False}):
+		for item in predictions.find({'datetime':{'$gt':dt.datetime.now() - dt.timedelta(days=1)}},{'_id':False}):
 			item2 = item.copy()
 			item2['datetime'] = item2['datetime'].strftime('%Y%m%d%H%M%S')
 			outlist.append(item2)
