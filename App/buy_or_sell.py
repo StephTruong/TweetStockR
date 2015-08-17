@@ -116,7 +116,7 @@ def main(outfile):
 					streak_n=0
 
 				predictions.insert_one({'stock': ticker, 'datetime': dt.now(), 'prediction': prediction, 'streak': streak_n})
-				out = ','.join([dt.now().strftime("%Y%m%d%H%M%S"), ticker, prediction, streak_n]) + '\n'
+				out = ','.join([str(i) for i in [dt.now().strftime("%Y%m%d%H%M%S"), ticker, prediction, streak_n]]) + '\n'
 				print out
 				prediction_file.write( out )
 
