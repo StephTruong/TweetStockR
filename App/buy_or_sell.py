@@ -67,10 +67,10 @@ def main(outfile):
 				for sent in recent_sentiment:
 					countSentiment += 1
 					if countSentiment < 101:
-						sumNewSentiment += sent['score']
+						sumNewSentiment += float(sent['score'])
 						countNewSentiment += 1
 					else:
-						sumOldSentiment += sent['score']
+						sumOldSentiment += float(sent['score'])
 						countOldSentiment += 1
 
 				averageNewSentiment = float(sumNewSentiment) / countNewSentiment
@@ -84,10 +84,10 @@ def main(outfile):
 				for price in recent_prices:
 					countStock += 1
 					if countStock < 61:
-						sumNewStock += price['price']
+						sumNewStock += float(price['price'])
 						countNewStock += 1
 					else:
-						sumOldStock += price['price']
+						sumOldStock += float(price['price'])
 						countOldStock += 1
 
 				averageNewStock = float(sumNewStock) / countNewStock
