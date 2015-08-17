@@ -109,7 +109,7 @@ def main(outfile):
 				if recent_prediction.count() > 0:
 					last_prediction = list(recent_prediction)[0]
 					if last_prediction['prediction'] == prediction:
-						streak_n = recent_prediction['streak'] + 1
+						streak_n = last_prediction['streak'] + 1
 					else:
 						streak_n = 0
 				else:
