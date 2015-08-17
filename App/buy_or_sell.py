@@ -77,9 +77,9 @@ def get_predictions(ticker):
 		print 'STOCK PRICE: ' + str(ticker) + ' New: ' + str(averageNewStock) + ' Old: ' + str(averageOldStock)
 		#print datetime.datetime.now()
 
-		if averageNewSentiment > averageOldSentiment and averageNewStock > averageOldStock:
+		if averageNewSentiment > averageOldSentiment + .0000001 and averageNewStock > averageOldStock + .0000001:
 			prediction = 'BUY'
-		elif averageNewSentiment < averageOldSentiment and averageNewStock < averageOldStock:
+		elif averageNewSentiment < averageOldSentiment - .0000001 and averageNewStock < averageOldStock - .0000001:
 			prediction = 'SELL'
 		else:
 			prediction = 'HOLD'
