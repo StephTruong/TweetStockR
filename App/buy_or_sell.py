@@ -35,12 +35,12 @@ def get_predictions(ticker):
 		recent_sentiment = sentiment.find({'company': ticker}).limit(1000).sort('datetime', pmg.DESCENDING)
 		if recent_sentiment.count() < 101:
 			return
-		print ('Company: ' + str(ticker) + ', Tweet record: ' + str(recent_sentiment.count()))
+		#print ('Company: ' + str(ticker) + ', Tweet record: ' + str(recent_sentiment.count()))
 
 		# Check to see if Stock prices are available
 		recent_prices = prices.find({'name': ticker.upper()}).limit(720).sort('recorded', pmg.DESCENDING)
 		if recent_prices.count() < 61:
-			print ('Company: ' + str(ticker) + ', Stock record not found.')
+			#print ('Company: ' + str(ticker) + ', Stock record not found.')
 			return
 
 		# Searches for the last 1000 sentiment readings
@@ -118,7 +118,7 @@ def main(outfile):
 
 	while True: # doing a infinite loop
 
-		pool = multiprocessing.Pool(4)
+		pool = multiprocessing.Pool(2)
 
 		start = time.time()
 
@@ -135,8 +135,10 @@ def main(outfile):
 			pool.terminate()
 			break
 			# raise KeyboardInterrupt('Stopped with KeyboardInterrupt')
-
+		
 		print "predictions took", time.time() - start, 'seconds'
-	  
+		time.sleep(10)	  	
+
+
 if __name__ == '__main__':
 	main('predictions.csv')
